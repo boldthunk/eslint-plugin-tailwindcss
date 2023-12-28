@@ -84,6 +84,29 @@ ruleTester.run("classnames-order", rule, {
       ],
     },
     {
+      code: `<div class:list="{['custom', 'container', 'box-content', 'lg:box-border']}">Simple, using 'class:list' prop with array</div>`,
+      options: [
+        {
+          classRegex: "^class:list$",
+        },
+      ],
+    },
+    {
+      code: `<div class:list="{[
+        'custom',
+        'container',
+        'box-content',
+        'lg:box-border'
+      ]}">
+      Simple, using 'class:list' prop with array and newlines
+      </div>`,
+      options: [
+        {
+          classRegex: "^class:list$",
+        },
+      ],
+    },
+    {
       code: "<div className={ctl(`w-full p-10 ${live && 'bg-blue-100 dark:bg-purple-400 sm:rounded-lg'}`)}>ctl + exp</div>",
     },
     {
@@ -160,6 +183,31 @@ ruleTester.run("classnames-order", rule, {
     },
     {
       code: `<div className={clsx(\`absolute bottom-0 flex h-[270px] w-full flex-col\`)}>clsx</div>`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+    },
+    {
+      code: `<div className={clsx(['absolute', 'bottom-0', 'flex', 'h-[270px]', 'w-full', 'flex-col'])}>clsx with array</div>`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+    },
+    {
+      code: `<div className={clsx([
+        'absolute',
+        'bottom-0',
+        'flex',
+        'h-[270px]',
+        'w-full',
+        'flex-col'
+      ])}>
+      clsx with array and newlines
+      </div>`,
       options: [
         {
           callees: ["clsx"],
@@ -335,6 +383,40 @@ ruleTester.run("classnames-order", rule, {
       options: [
         {
           classRegex: "^tw$",
+        },
+      ],
+      errors: errors,
+    },
+    {
+      code: `<div class:list={['sm:py-5', 'p-4', 'sm:px-7', 'lg:p-8']}>Enhancing readability with 'class:list' prop</div>`,
+      output: `<div class:list={['p-4', 'sm:px-7', 'sm:py-5', 'lg:p-8']}>Enhancing readability with 'class:list' prop</div>`,
+      options: [
+        {
+          classRegex: "^class:list$",
+        },
+      ],
+      errors: errors,
+    },
+    {
+      code: `<div class:list={[
+        'sm:py-5',
+        'p-4',
+        'sm:px-7',
+        'lg:p-8'
+      ]}>
+      Enhancing readability with 'class:list' prop
+      </div>`,
+      output: `<div class:list={[
+        'p-4',
+        'sm:px-7',
+        'sm:py-5',
+        'lg:p-8'
+      ]}>
+      Enhancing readability with 'class:list' prop
+      </div>`,
+      options: [
+        {
+          classRegex: "^class:list$",
         },
       ],
       errors: errors,
@@ -537,6 +619,66 @@ ruleTester.run("classnames-order", rule, {
       errors: errors,
     },
     {
+      code: `clsx(['absolute', 'bottom-0', 'w-full', 'h-[70px]', 'flex', 'flex-col']);`,
+      output: `clsx(['absolute', 'bottom-0', 'flex', 'h-[70px]', 'w-full', 'flex-col']);`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+      errors: errors,
+    },
+    {
+      code: `clsx([
+        'absolute',
+        'bottom-0',
+        'w-full',
+        'h-[70px]',
+        'flex',
+        'flex-col'
+      ]);`,
+      output: `clsx([
+        'absolute',
+        'bottom-0',
+        'flex',
+        'h-[70px]',
+        'w-full',
+        'flex-col'
+      ]);`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+      errors: errors,
+    },
+    {
+      code: `clsx([
+        'absolute',
+        'bottom-0',
+        'flex',
+        'h-[70px]',
+        ['text-white', 'ml-4'],
+        'w-full',
+        'flex-col'
+      ]);`,
+      output: `clsx([
+        'absolute',
+        'bottom-0',
+        'flex',
+        'h-[70px]',
+        ['ml-4', 'text-white'],
+        'w-full',
+        'flex-col'
+      ]);`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+      errors: errors,
+    },
+    {
       code: `cva({
           primary: ["absolute bottom-0 w-full h-[70px] flex flex-col"],
         })`,
@@ -553,6 +695,40 @@ ruleTester.run("classnames-order", rule, {
     {
       code: `<div className={clsx(\`absolute bottom-0 w-full h-[270px] flex flex-col\`)}>clsx</div>`,
       output: `<div className={clsx(\`absolute bottom-0 flex h-[270px] w-full flex-col\`)}>clsx</div>`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+      errors: errors,
+    },
+    {
+      code: `<div className={clsx(['absolute', 'bottom-0', 'w-full', 'h-[270px]', 'flex', 'flex-col'])}>clsx</div>`,
+      output: `<div className={clsx(['absolute', 'bottom-0', 'flex', 'h-[270px]', 'w-full', 'flex-col'])}>clsx</div>`,
+      options: [
+        {
+          callees: ["clsx"],
+        },
+      ],
+      errors: errors,
+    },
+    {
+      code: `<div className={clsx([
+        'absolute',
+        'bottom-0',
+        'w-full',
+        'h-[270px]',
+        'flex',
+        'flex-col'
+      ])}>clsx</div>`,
+      output: `<div className={clsx([
+        'absolute',
+        'bottom-0',
+        'flex',
+        'h-[270px]',
+        'w-full',
+        'flex-col'
+      ])}>clsx</div>`,
       options: [
         {
           callees: ["clsx"],
@@ -687,6 +863,29 @@ ruleTester.run("classnames-order", rule, {
             ? "flex ring-black"
             : undefined
         )}
+      />
+      `,
+      errors: generateErrors(2),
+    },
+    {
+      code: `
+      <div
+        className={clsx([
+          "w-full h-10 rounded",
+          name === "white"
+            ? "ring-black flex"
+            : undefined
+        ])}
+      />
+      `,
+      output: `
+      <div
+        className={clsx([
+          "h-10 w-full rounded",
+          name === "white"
+            ? "flex ring-black"
+            : undefined
+        ])}
       />
       `,
       errors: generateErrors(2),
